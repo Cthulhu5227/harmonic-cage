@@ -6,8 +6,6 @@ An implementation of the paper "Harmonic Coordinates for Character Articulation"
 are solved once using libigl, and the mesh deforms in real time as you drag cage
 control points.
 
-Reference papers are included:
-  - Harmonic_paper.pdf
 
 Setup (Conda was used for me)
 
@@ -46,4 +44,4 @@ Controls!
   project.py          Main script — loads mesh, builds cage, solves weights,
                       runs the interactive viewer
   models/             OFF mesh files used as input
-  Harmonic_paper.pdf  Original paper this project implements
+
