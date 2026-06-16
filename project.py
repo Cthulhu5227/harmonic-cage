@@ -20,6 +20,7 @@ def harmonic (V, F, b, bc, l):
     Qfb = free_rows[:, b]               # free-vs-fixed 
     
     harmony = np.zeros((n, bc.shape[1]))
+    harmony[b] = bc
     sol = spsolve(Qff, -(Qfb @ bc))
     harmony[free] = sol.reshape(free.size, bc.shape[1])
     
