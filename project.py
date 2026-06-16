@@ -1,11 +1,32 @@
-# harmonic cage coords 
+# harmonic cage coords l = 
 # see README for details
 
 import igl
 import numpy as np
 import pyvista as pv
 from scipy.spatial import ConvexHull
+from scipy.sparse.linalg import spsolve
 from vtkmodules.vtkInteractionStyle import ( vtkInteractorStyleTrackballCamera, vtkInteractorStyleUser,) # should be in when install pyvista
+
+#making the harmonic laplace solver
+def harmonic (V, F, b, bc, l):
+    laplacian = igl.cotmatrix(V,F).tocsr()# since k only every equals 1
+    n = V.shape[0]
+    
+    free = np.setdiff1d(np.arange(n), b)
+    
+    free_rows = laplacian[free]                 # rows = the equations to solve
+    Qff = free_rows[:, free].tocsc()    # free-vs-free, the matrix we invert
+    Qfb = free_rows[:, b]               # free-vs-fixed 
+    
+    harmony = np.zeros((n, bc.shape[1]))
+    sol = spsolve(Qff, -(Qfb @ bc))
+    harmony[free] = sol.reshape(free.size, bc.shape[1])
+    
+    return harmony
+    
+
+
 
 models = ["models/decimated-knight.off"]  # maybe impliment switching later
 
@@ -28,7 +49,7 @@ cage_pts = V_cage_unique.copy() # mutable cage state
 
 bc = np.eye(len(b))
 # Part 2, Smooth functions over the mesh / solutions to Laplace equation 
-W  = igl.harmonic(V, F, b, bc, 1) # technically this isn't the exact way we solve in the paper but equivalent, was unable to find solver from og paper
+W  = harmonic(V, F, b, bc, 1) # technically this isn't the exact way we solve in the paper but equivalent, was unable to find solver from og paper
 #print(f"Weights computed Shape: {W.shape}")
  
 # Part 4, Use coordinate functions to interpolate a cage deformation
