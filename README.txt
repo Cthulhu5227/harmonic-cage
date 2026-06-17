@@ -2,9 +2,13 @@ Harmonic Coordinates for Character Articulation Paper Implementation
 
 
 An implementation of the paper "Harmonic Coordinates for Character Articulation"
-(Joshi et al.). A cage is built around a 3-D mesh, harmonic weights
-are solved once using libigl, and the mesh deforms in real time as you drag cage
-control points.
+(Joshi et al.). A cage is built around a 3-D mesh, then a hand-written solver
+computes the harmonic weights: it assembles the (powered) cotangent Laplacian,
+partitions interior from cage-boundary vertices, applies the Dirichlet boundary
+conditions, and solves the resulting sparse system with SciPy. libigl supplies
+only the discrete operators (cotangent Laplacian and mass matrix). The weights
+are solved once, and the mesh deforms in real time as you drag cage control
+points.
 
 
 Setup (Conda was used for me)
@@ -17,7 +21,7 @@ Setup (Conda was used for me)
      conda install numpy scipy matplotlib
 
 3.install libigl and PyVista via pip:
-     pip install libel
+     pip install libigl
      pip install pyvista
 
 
